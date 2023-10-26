@@ -1,22 +1,28 @@
 SELECT
-  $i AS sample_no,
-  mon_get_database(-2) AS db_name,
-  mon_get_database(-2) AS db_status,
-  mon_get_database(-2) AS db_conn_time,
-  mon_get_database(-2) AS db_act_time,
-  mon_get_database(-2) AS db_act_aborted,
-  mon_get_database(-2) AS db_act_completed,
-  mon_get_database(-2) AS db_act_rejected,
-  mon_get_table('SYSIBMADM','SNAPDB',-2) AS db_rows_read,
-  mon_get_table('SYSIBMADM','SNAPDB',-2) AS db_rows_written,
-  mon_get_bufferpool(-2) AS bp_name,
-  mon_get_bufferpool(-2) AS bp_id,
-  mon_get_bufferpool(-2) AS bp_cur_pages,
-  mon_get_bufferpool('',-2) AS bp_async_data_read_reqs,
-  mon_get_bufferpool('',-2) AS bp_async_data_write_reqs,
-  mon_get_bufferpool('',-2) AS bp_async_index_read_reqs,
-  mon_get_bufferpool('',-2) AS bp_async_index_write_reqs,
-  mon_get_bufferpool('',-1) AS bp_direct_reads,
-  mon_get_bufferpool('',-1) AS bp_direct_writes,
-  mon_get_bufferpool('',-1) AS bp_direct_read_reqs,
-  mon_get_bufferpool('',-1) AS bp_direct_write_reqs
+  'test1' AS sample_no,
+  dbmon.db_name,
+  dbmon.db_status,
+  dbmon.db_conn_time,
+  dbmon.db_act_time,
+  dbmon.db_act_aborted,
+  dbmon.db_act_completed,
+  dbmon.db_act_rejected,
+  dbmon.db_rows_read,
+  dbmon.db_rows_written,
+  bp.bp_name,
+  bp.bp_id,
+  bp.bp_cur_pages,
+  bp.bp_async_data_read_reqs,
+  bp.bp_async_data_write_reqs,
+  bp.bp_async_index_read_reqs,
+  bp.bp_async_index_write_reqs,
+  bp.bp_direct_reads,
+  bp.bp_direct_writes,
+  bp.bp_direct_read_reqs,
+  bp.bp_direct_write_reqs
+FROM
+  TABLE(MON_GET_DATABASE(-2)) AS dbmon
+  CROSS JOIN
+  LATERAL (SELECT * FROM TABLE(MON_GET_TABLE('SYSIBMADM', 'SNAPDB', -2))) AS db
+  CROSS JOIN
+  LATERAL (SELECT * FROM TABLE(MON_GET_BUFFERPOOL(-2))) AS bp
