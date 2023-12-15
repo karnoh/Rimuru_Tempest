@@ -1,0 +1,85 @@
+SQL Plan Change Monitoring Algorithm Presentation
+Objective:
+Detect and Report Changes in Execution Plans for Key SQL Queries After Each Release.
+
+Data:
+5 SQL patterns for identifying relevant queries.
+Release number (release_num).
+DB2 database with plan and execution data.
+Steps:
+1. Baseline Run:
+Objective: Capture baseline data for SQL queries post-release.
+
+Identify SQL Queries:
+
+Search for queries matching the 5 predefined patterns.
+Record Baseline:
+
+Capture for each matching query:
+Execution ID
+Statement ID
+Plan ID
+Timestamp
+Release number
+Store Baseline:
+
+Save the captured data in a dedicated table for future comparisons.
+2. Continuous Monitoring (Every 15 Minutes):
+Objective: Detect and report changes in execution plans.
+
+Identify SQL Queries:
+
+Search for queries matching the 5 predefined patterns.
+For Each Matching Query:
+
+Check if statement and plan IDs exist in the baseline table.
+
+If Found:
+
+Track Time:
+Calculate the time difference from the previous record.
+Detect Change:
+If the time difference exceeds 15 minutes, mark it as a potential plan change.
+Update:
+Update the table with the latest timestamp and release number.
+If Not Found:
+
+Record New:
+Add a new entry with the current timestamp, release number, execution ID, statement ID, and plan ID.
+3. Reporting:
+Objective: Generate insightful reports.
+
+Queries with Potential Plan Changes:
+
+Report queries marked as potential plan changes since the last release.
+Time-based Comparison:
+
+Generate a report comparing plan changes over days and releases.
+Patterns Analysis:
+
+Identify any significant increase in plan changes for specific patterns.
+4. Benefits:
+Objective: Leverage insights for optimization and troubleshooting.
+
+Early Detection:
+
+Identify inefficient plan changes early to address performance issues promptly.
+Release Rollbacks:
+
+Improve release rollback decisions based on identified plan changes.
+Data-Driven Insights:
+
+Use the data for optimizing SQL code and database configuration.
+Additional Considerations:
+Logging and Alerts:
+
+Implement logging for tracking changes and alerts for immediate notification.
+Automation:
+
+Consider automating the process to run at regular intervals, reducing manual effort.
+Historical Data:
+
+Maintain historical data for trend analysis and long-term performance monitoring.
+Collaboration:
+
+Share reports with relevant teams for collaborative optimization efforts.
