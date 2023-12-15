@@ -1,0 +1,97 @@
+CREATE PROCEDURE add_new_columns (
+ IN table_schema VARCHAR(128),
+ IN table_name VARCHAR(128),
+ IN column_list VARCHAR(4000),
+ IN data_type_list VARCHAR(4000),
+ IN default_value_list VARCHAR(4000)
+)
+LANGUAGE SQL
+BEGIN
+  -- Declare variables
+  DECLARE column_name VARCHAR(128);
+  DECLARE data_type VARCHAR(128);
+  DECLARE default_value VARCHAR(128);
+  DECLARE valid_data_type INTEGER DEFAULT 0;
+  DECLARE error_message VARCHAR(255);
+  DECLARE column_idx INTEGER DEFAULT 1;
+  DECLARE column_cnt INTEGER;
+  DECLARE sql_stmt NVARCHAR(4000);
+
+  -- Validate table existence
+  IF NOT EXISTS (SELECT * FROM SYSCAT.TABLES
+    WHERE TABSCHEMA = table_schema AND TABNAME = table_name) THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Table does not exist';
+    RETURN;
+  END IF;
+
+  -- Initialize SQL statement and column count
+  SET sql_stmt = 'ALTER TABLE ' || table_schema || '.' || table_name;
+  SET column_cnt = CARDINALITY(STRING_SPLIT(column_list, ','));
+
+  -- Loop through column list
+  WHILE column_idx <= column_cnt DO
+    -- Get column name and data type
+    SET column_name = TRIM(STRING_SPLIT(column_list, ',', column_idx));
+    SET data_type = TRIM(STRING_SPLIT(data_type_list, ',', column_idx));
+
+    -- Check if column already exists
+    IF NOT EXISTS (SELECT 1 FROM SYSCAT.COLUMNS
+      WHERE TABSCHEMA = table_schema AND TABNAME = table_name AND COLNAME = column_name) THEN
+      -- Validate data type compatibility
+      SELECT valid_data_type, error_message INTO valid_data_type, error_message
+      FROM INFORMATION_SCHEMA.SQL_TYPE_INFO
+      WHERE TYPE_NAME = data_type
+      AND DATA_TYPE = (SELECT DATA_TYPE FROM SYSCAT.DATATYPES WHERE TYPE_NAME = data_type);
+
+      -- Handle invalid data type
+      IF NOT valid_data_type THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
+        RETURN;
+      END IF;
+
+      -- Validate default value (skip if NULL)
+      IF default_value IS NOT NULL THEN
+        SET default_value = TRIM(STRING_SPLIT(default_value_list, ',', column_idx));
+
+        -- Check if default value is valid for data type
+        IF CASE
+          WHEN data_type IN ('INT', 'SMALLINT', 'BIGINT', 'DECIMAL', 'NUMERIC') THEN
+            NOT ISNUMERIC(default_value)
+          WHEN data_type IN ('CHAR', 'VARCHAR', 'NCHAR', 'NVARCHAR') THEN
+            NOT IS_STRING(default_value, data_type)
+          WHEN data_type IN ('DATE', 'TIME', 'TIMESTAMP') THEN
+            NOT CAST(default_value AS datetime) IS NOT NULL
+          ELSE TRUE
+        END THEN
+          SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid default value for column ' || column_name;
+          RETURN;
+        END IF;
+      END IF;
+
+      -- Append ADD COLUMN clause
+      SET sql_stmt = sql_stmt || ' ADD COLUMN ' || column_name || ' ' || data_type;
+
+      -- Add DEFAULT clause if needed
+      IF default_value IS NOT NULL THEN
+        SET sql_stmt = sql_stmt || ' DEFAULT ' || default_value;
+      END IF;
+
+      -- Separate clauses with commas
+      IF column_idx < column_cnt THEN
+        SET sql_stmt = sql_stmt || ',';
+      END IF;
+    ELSE
+      -- Log warning about existing column (optional)
+      -- e.g., SET WARNING_TEXT = 'Column ' || column_name || ' already exists, skipping.';
+    END IF;
+
+    -- Increment column index
+    SET column_idx = column_idx + 1;
+  END WHILE;
+
+  -- Execute ALTER statement
+  EXECUTE IMMEDIATE sql_stmt;
+
+  -- Check for successful execution
+  IF SQLSTATE = '00000' THEN
+    EXEC SQLSTATE '00000' SET MESSAGE_TEXT = 'New columns successfully added to table:
