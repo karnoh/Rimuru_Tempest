@@ -1,0 +1,90 @@
+Current Challenges in Our JIRA Workflow
+Issue:	Impact
+Delayed Task Start:	Back-and-forth emails/Skype messages slow down gathering complete details.
+Missed Task Creation:	Some requests never become JIRA tasks, causing effort tracking gaps.
+Difficult Progress :Tracking	Email threads make it hard to analyze work progress and quantify effort.
+Proposed Solution: Introduce a Wiki Page for Request Intake
+Component:	Benefit
+Centralized Form:	Requesters enter details directly into a structured wiki form—no more endless email chains.
+Predefined Questionnaires:	Tailored forms capture all needed information upfront, ensuring complete task records.
+Integrated Dashboard:	Both the team and requesters can view work status and progress in real time.
+Consistent Tracking:	Every request is logged and tracked via JIRA, eliminating missed tasks and improving analysis.
+
+Streamlined Workflow Process
+Requester Submission
+
+The requester fills out the wiki form with all necessary details.
+Task Creation
+
+The team reviews the form and creates or links a corresponding JIRA task.
+Work Execution
+
+The team works on the task and updates its status on the dashboard.
+Progress Monitoring
+
+Requesters and team members track progress through the centralized dashboard.
+Task Closure
+
+Once completed, the JIRA task is closed, with all steps documented for future analysis.
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+Current Process Challenges
+Issue:	Impact
+Delayed Start:	Excessive back-and-forth emails/Skype messages to gather task details.
+Missed Task Creation:	Untracked work due to occasional oversight in creating JIRA tickets.
+Poor Visibility:	Difficulty analyzing email threads for progress updates or effort metrics.
+Proposed Solution: Wiki-Based Intake System
+Component:	Purpose
+Standardized Wiki Forms:	Capture all request details upfront via scenario-based questionnaires.
+Automated JIRA Integration:	Auto-generate JIRA tickets from wiki submissions to prevent missed tasks.
+Shared Dashboard:	Centralized tracking for both teams and requesters to monitor progress.
+Workflow Discipline:	Mandate wiki use for non-critical requests; critical issues use direct JIRA.
+Simplified Workflow Process
+Step	Action
+1. Request Submission	Requester fills out the wiki form with predefined details (e.g., type, urgency).
+2. Task Creation	Team reviews and converts the wiki entry into a JIRA ticket.
+3. Progress Tracking	Team updates JIRA status; requester views real-time progress on the dashboard.
+4. Completion & Closure	Task marked "Done" in JIRA; requester notified automatically.
+Key Benefits
+Faster Start: Eliminates email delays by collecting all details upfront.
+
+Consistent Tracking: Reduces human error in ticket creation via automation.
+
+Transparency: Dashboard provides a single source of truth for stakeholders.
+
+Measurable Output: Clear metrics (e.g., turnaround time, task volume) for reporting.
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+Currently, we are tracking our work using JIRA. Initially, requests are received via email or Skype, which are then converted to JIRA tasks, worked on, and closed upon completion. However, this process has some challenges, such as:
+
+Back-and-forth email communication to gather necessary details, which delays the start of work.
+
+Occasionally missing the creation of JIRA tasks, leading to a lack of tracking for the effort put into tasks.
+
+Difficulties in analyzing email communication for work progress and effort tracking.
+
+Proposed Solution: Creating a Wiki Page
+
+To address these challenges, I propose creating a wiki page that will serve as the first point of contact for anyone seeking our support. The wiki page will include different scenarios and questionnaires tailored to the various types of requests our team handles. This approach will help us in the following ways:
+
+Reduce Email Traffic: Requesters can input details directly into the wiki page, avoiding the need for extensive email communication.
+
+Centralized Tracking: Our team can use the dashboard to track work in progress, and requesters can view the progress of their requests.
+
+Streamlined Workflow: By building a culture of using the wiki page, our team can rely on the board for all work-related tasks, except for critical issues, which will still be created using the same board.
+
+Quantifiable Work Effort: This system will help us quantify our work and improve the way we provide solutions.
+
+Hierarchy and Chain of Activity:
+
+Requester inputs details into the wiki page.
+
+Team reviews and assigns the task in JIRA.
+
+Work on the task and track progress using the dashboard.
+
+Requester can monitor the progress through the dashboard.
+
+Task is completed and closed in JIRA.
